@@ -87,6 +87,14 @@ const searchUser = TryCatch(async (req, res) => {
 
   const { name = "" } = req.query;
 
+  if( name === "" ) {
+    const nonusers = [];
+    return res.status(200).json({
+      success: true,
+      nonusers,
+    })
+  }
+
   // Find All my chats
   const myChats = await Chat.find({ groupChat: false, members: req.user });
 
