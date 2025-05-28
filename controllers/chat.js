@@ -144,10 +144,7 @@ const addMembers = TryCatch(async (req, res, next) => {
 
 const removeMember = TryCatch(async (req, res, next) => {
 
-  console.log("hrere")
   const { userId, chatId } = req.body;
-  console.log("hree")
-  console.log(userId);
 
   const [chat, userThatWillBeRemoved] = await Promise.all([
     Chat.findById(chatId),
