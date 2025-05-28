@@ -20,7 +20,7 @@ const adminLogin = TryCatch(async (req, res, next) => {
 
   return res
     .status(200)
-    .cookie("chattu-admin-token", token, {
+    .cookie("ChatPro-admin-token", token, {
       ...cookieOptions,
       maxAge: 1000 * 60 * 15,
     })
@@ -35,7 +35,7 @@ const adminLogout = TryCatch(async (req, res, next) => {
   console.log("here it comes logout")
   return res
     .status(200)
-    .cookie("chattu-admin-token", "", {
+    .cookie("ChatPro-admin-token", "", {
       ...cookieOptions,
       maxAge: 0,
     })
