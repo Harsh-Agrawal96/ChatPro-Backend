@@ -10,12 +10,15 @@ const createSingleChats = async (numChats) => {
 
     const chatsPromise = [];
 
-    for (let i = 0; i < users.length; i++) {
-      for (let j = i + 1; j < users.length; j++) {
+    for (let i = 0; i < numChats; i++) {
+
+      const user1 = Math.floor(Math.random()*users.length);
+      const user2 = Math.floor(Math.random()*users.length);
+      if( user1 !== user2 ){
         chatsPromise.push(
           Chat.create({
             name: faker.lorem.words(2),
-            members: [users[i], users[j]],
+            members: [users[user1], users[user2]],
           })
         );
       }
@@ -71,19 +74,100 @@ const createGroupChats = async (numChats) => {
 
 const createMessages = async (numMessages) => {
   try {
-    const users = await User.find().select("_id");
     const chats = await Chat.find().select("_id");
 
     const messagesPromise = [];
 
     for (let i = 0; i < numMessages; i++) {
-      const randomUser = users[Math.floor(Math.random() * users.length)];
       const randomChat = chats[Math.floor(Math.random() * chats.length)];
+
+      const completeChat = await Chat.find({ _id : randomChat });
+      const chatMembers = completeChat[0]["members"];
+      const memberInd = chatMembers[Math.floor(Math.random() * chatMembers.length)]
+
+      const senderId = {
+        "_id" : memberInd
+      }
 
       messagesPromise.push(
         Message.create({
           chat: randomChat,
-          sender: randomUser,
+          sender: senderId,
+          content: faker.lorem.sentence(),
+        })
+      );
+
+    }
+
+    await Promise.all(messagesPromise);
+
+    process.exit();
+  } catch (error) {
+    console.error(error);
+    process.exit(1);
+  }
+};
+
+const createAttachmentMessages = async (numMessages) => {
+  try {
+    const chats = await Chat.find().select("_id");
+
+    const messagesPromise = [];
+
+    for (let i = 0; i < numMessages; i++) {
+      const randomChat = chats[Math.floor(Math.random() * chats.length)];
+
+      const completeChat = await Chat.find({ _id : randomChat });
+      const chatMembers = completeChat[0]["members"];
+      const memberInd = chatMembers[Math.floor(Math.random() * chatMembers.length)]
+
+      const senderId = {
+        "_id" : memberInd
+      }
+
+      messagesPromise.push(
+        Message.create({
+          chat: randomChat,
+          sender: senderId,
+          content: "",
+          attachments: [
+            {
+              public_id: faker.string.uuid(),
+              url: faker.image.url(),
+            },
+          ],
+        })
+      );
+
+    }
+
+    await Promise.all(messagesPromise);
+
+    process.exit();
+  } catch (error) {
+    console.error(error);
+    process.exit(1);
+  }
+};
+
+const createMessagesInAChat = async (chatId, numMessages) => {
+  try {
+    const completeChat = await Chat.find({ _id : chatId });
+      const chatMembers = completeChat[0]["members"];
+
+    const messagesPromise = [];
+
+    for (let i = 0; i < numMessages; i++) {
+      const memberInd = chatMembers[Math.floor(Math.random() * chatMembers.length)]
+
+      const senderId = {
+        "_id" : memberInd
+      }
+
+      messagesPromise.push(
+        Message.create({
+          chat: chatId,
+          sender: senderId,
           content: faker.lorem.sentence(),
         })
       );
@@ -98,19 +182,24 @@ const createMessages = async (numMessages) => {
   }
 };
 
-const createMessagesInAChat = async (chatId, numMessages) => {
+const createAttachementMessagesInAChat = async (chatId, numMessages) => {
   try {
-    const users = await User.find().select("_id");
+    const completeChat = await Chat.find({ _id : chatId });
+      const chatMembers = completeChat[0]["members"];
 
     const messagesPromise = [];
 
     for (let i = 0; i < numMessages; i++) {
-      const randomUser = users[Math.floor(Math.random() * users.length)];
+      const memberInd = chatMembers[Math.floor(Math.random() * chatMembers.length)]
+
+      const senderId = {
+        "_id" : memberInd
+      }
 
       messagesPromise.push(
         Message.create({
           chat: chatId,
-          sender: randomUser,
+          sender: senderId,
           content: faker.lorem.sentence(),
         })
       );
@@ -131,4 +220,6 @@ export {
   createMessages,
   createMessagesInAChat,
   createSingleChats,
+  createAttachmentMessages,
+  createAttachementMessagesInAChat,
 };
