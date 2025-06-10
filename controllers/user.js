@@ -123,7 +123,7 @@ const searchUser = TryCatch(async (req, res) => {
 const sendFriendRequest = TryCatch(async (req, res, next) => {
 
   const { userId } = req.body;
-  if( userId === req.user ) return next(new ErrorHandler("Please Enter ID of different user", 400));
+  if( userId === req.user ) return next(new ErrorHandler("Requests can only be sent to others", 400));
 
   const request = await Request.findOne({
     $or: [
