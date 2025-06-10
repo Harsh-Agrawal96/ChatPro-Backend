@@ -1,4 +1,4 @@
-# 🏥 ChatPro
+#  ChatPro
 
 A full-stack MERN production-ready chat application that is feature-rich real-time messaging application with modern UI and secure communication capabilities.
 It support the concurrency for better interaction when multiple user are using ChatPro at the same time.
