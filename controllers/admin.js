@@ -10,7 +10,6 @@ import { adminSecretKey } from "../app.js";
 
 const adminLogin = TryCatch(async (req, res, next) => {
 
-  console.log("here it comes ");
   const { secretKey } = req.body;
 
   const isMatched = secretKey === adminSecretKey;
@@ -33,7 +32,6 @@ const adminLogin = TryCatch(async (req, res, next) => {
 
 const adminLogout = TryCatch(async (req, res, next) => {
 
-  console.log("here it comes logout")
   return res
     .status(200)
     .cookie("ChatPro-admin-token", "", {
@@ -47,7 +45,6 @@ const adminLogout = TryCatch(async (req, res, next) => {
 });
 
 const getAdminData = TryCatch(async (req, res, next) => {
-  console.log("here admin get data comes ")
   return res.status(200).json({
     admin: true,
   });

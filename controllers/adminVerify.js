@@ -95,7 +95,6 @@ const allMessages = TryCatch(async (req, res) => {
 
 const getDashboardStats = TryCatch(async (req, res) => {
 
-  console.log("here it stats data comes")
   const [groupsCount, usersCount, messagesCount, totalChatsCount] =
     await Promise.all([
       Chat.countDocuments({ groupChat: true }),
@@ -115,8 +114,6 @@ const getDashboardStats = TryCatch(async (req, res) => {
       $lte: today,
     },
   }).select("createdAt");
-
-  console.log(last7DaysMessages)
 
   const messages = new Array(7).fill(0);
   const dayInMiliseconds = 1000 * 60 * 60 * 24;
